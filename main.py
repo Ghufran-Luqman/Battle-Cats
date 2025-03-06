@@ -35,7 +35,9 @@ class Cat:
 
 def deal_damage(cat2, lower_bound, upper_bound):
     damage = random.randint(lower_bound, upper_bound)
-    damage -= cat2.shield
+    print(f"total damage being dealt: {damage}")
+    print(f"opponent's shield: {cat2.shield}")
+    damage = damage - cat2.shield
     if damage < 0:
         cat2.shield = damage * -1
         damage = 0
@@ -116,24 +118,18 @@ def main():
         canChooseRage = False
         cat1.turns -= 1
         if cat1.turns > 0:
-            print(f"\n\n\nIt's {cat1.name.title()}'s turn. Your HP is {cat1.hp}, your shield is currently {cat1.shield}. You have {cat1.turns} turns until you can use your rage. Type 'info' to see opponent's information. Please choose either claw or shield.")
-        elif cat1.turns == 0:
+            print(f"\n\n\n\n\n\nIt's {cat1.name.title()}'s turn.\nHP: *{cat1.hp}*\nShield: *{cat1.shield}*\nTurns until you can use rage: {cat1.turns}.\nMoves available: claw, shield.\n(type 'info' to see opponent's information)\n")
+        elif cat1.turns <= 0:
             canChooseRage = True
-            print(f"\n\n\nIt's {cat1.name.title()}'s turn. Your HP is {cat1.hp}, your shield is currently {cat1.shield}. You can use your rage! Type 'info' to see opponent's information. Please choose either claw, rage or shield.")
-            if cat1.turns < 0 or cat1.turns == 0:#reset turns till next roar
-                if cat1.get_type() == 'guardtail':#no. of turns depends on type
-                    cat1.turns = 3
-                elif cat1.get_type() == 'clawstrike':
-                    cat1.turns = 5
-                elif cat1.get_type() == 'thunderpurr':
-                    cat1.turns = 2
-                else:
-                    return "Error, something wrong with the mastery type."
+            print(f"\n\n\n\n\n\nIt's {cat1.name.title()}'s turn.\nHP: *{cat1.hp}*\nShield: *{cat1.shield}*\nMoves available: claw, rage and shield.\n(type 'info' to see opponent's information)\n")
         choice = input()
         choice = choice.lower().strip()
         while choice != 'claw' and choice != 'rage' and choice != 'shield' or choice == 'rage' and canChooseRage == False or choice == 'info':
             if choice == 'info':
-                print(f"Your opponent's HP is {cat2.hp}, and {cat2.name.title()}'s shield is {cat2.shield}. They have {cat2.turns} turns left until they can use their rage.")
+                if cat2.turns > 0:
+                    print(f"\nOpponent HP: *{cat2.hp}*\nOpponent shield: *{cat2.shield}*\nTurns left until they can use their rage: *{cat2.turns}*")
+                else:
+                    print(f"\nOpponent HP: *{cat2.hp}*\nOpponent shield: *{cat2.shield}*\nThey can use their *rage*!")
             elif canChooseRage == False:
                 print("Sorry, that input was invalid. Please pick from either claw or shield.")
             else:
@@ -143,33 +139,41 @@ def main():
             message = claw(cat1, cat2)
             print(message)
         elif choice == 'rage':
+            usedRage = True
             message = rage(cat1, cat2)
             print(message)
+            if cat1.get_type() == 'guardtail':#reset turns till next rage
+                cat1.turns = 4
+            elif cat1.get_type() == 'clawstrike':
+                cat1.turns = 6
+            elif cat1.get_type() == 'thunderpurr':
+                cat1.turns = 3
+            else:
+                return "Error, something wrong with the mastery type."
         elif choice == 'shield':
             message = shield(cat1)
             print(message)
+        time.sleep(0.4)
+
+        if cat1.hp <= 0 or cat2.hp <=0:
+            break
+
         #second player's turn
         canChooseRage = False
         cat2.turns -= 1
         if cat2.turns > 0:
-            print(f"\n\n\nIt's {cat2.name.title()}'s turn. Your HP is {cat2.hp}, your shield is currently {cat2.shield}. You have {cat2.turns} turns until you can use your rage. Type 'info' to see opponent's information. Please choose either claw or shield.")
-        elif cat2.turns == 0:
+            print(f"\n\n\n\n\n\nIt's {cat2.name.title()}'s turn.\nHP: *{cat2.hp}*\nShield: *{cat2.shield}*\nTurns until you can use rage: {cat2.turns}.\nMoves available: claw, shield.\n(type 'info' to see opponent's information)\n")
+        elif cat2.turns <= 0:
             canChooseRage = True
-            print(f"\n\n\nIt's {cat2.name.title()}'s turn. Your HP is {cat2.hp}, your shield is currently {cat2.shield}. You can use your rage! Type 'info' to see opponent's information. Please choose either claw, rage or shield.")
-            if cat2.turns < 0 or cat2.turns == 0:#reset turns till next roar
-                if cat2.get_type() == 'guardtail':#no. of turns depends on type
-                    cat2.turns = 3
-                elif cat2.get_type() == 'clawstrike':
-                    cat2.turns = 5
-                elif cat2.get_type() == 'thunderpurr':
-                    cat2.turns = 2
-                else:
-                    return "Error, something wrong with the mastery type."
+            print(f"\n\n\n\n\n\nIt's {cat2.name.title()}'s turn.\nHP: *{cat2.hp}*\nShield: *{cat2.shield}*\nMoves available: claw, rage and shield.\n(type 'info' to see opponent's information)\n")
         choice = input()
         choice = choice.lower().strip()
         while choice != 'claw' and choice != 'rage' and choice != 'shield' and choice != 'info' or choice == 'rage' and canChooseRage == False or choice == 'info':
             if choice == 'info':
-                print(f"Your opponent's HP is {cat1.hp}, and {cat1.name.title()}'s shield is {cat1.shield}. They have {cat1.turns} turns left until they can use their rage.")
+                if cat1.turns > 0:
+                    print(f"\nOpponent HP: *{cat1.hp}*\nOpponent shield: *{cat1.shield}*\nTurns left until they can use their rage: *{cat1.turns}*")
+                else:
+                    print(f"\nOpponent HP: *{cat1.hp}*\nOpponent shield: *{cat1.shield}*\nThey can use their *rage*!")
             elif canChooseRage == False:
                 print("Sorry, that input was invalid. Please pick from either claw or shield.")
             else:
@@ -179,11 +183,28 @@ def main():
             message = claw(cat2, cat1)
             print(message)
         elif choice == 'rage':
+            usedRage = True
             message = rage(cat2, cat1)
             print(message)
+            if cat2.get_type() == 'guardtail':#reset turns till next rage
+                cat2.turns = 4
+            elif cat2.get_type() == 'clawstrike':
+                cat2.turns = 6
+            elif cat2.get_type() == 'thunderpurr':
+                cat2.turns = 3
+            else:
+                return "Error, something wrong with the mastery type."
         elif choice == 'shield':
             message = shield(cat2)
             print(message)
+        time.sleep(0.4)
+
+    if cat1.hp <= 0:
+        print(f"GAME OVER. {cat2.name.title()} WINS!!")
+    elif cat2.hp <= 0:
+        print(f"GAME OVER. {cat1.name.title()} WINS!!")
+    else:
+        print("error, exited while loop unexpectedly")
 
 if __name__ == "__main__":
     main()
